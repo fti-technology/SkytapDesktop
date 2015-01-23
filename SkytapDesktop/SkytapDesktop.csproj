@@ -121,9 +121,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icons\Icon1.ico" />
-    <Content Include="icons\skytap-running.ico" />
-    <Content Include="icons\skytap-stopped.ico" />
-    <Content Include="icons\skytap-suspended.ico" />
+    <Content Include="icons\skytap-running.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icons\skytap-stopped.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="icons\skytap-suspended.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="icons\skytap.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

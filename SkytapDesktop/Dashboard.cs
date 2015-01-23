@@ -20,6 +20,9 @@ namespace SkytapDesktop
     {
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
+        private Icon skytapIcon;
+        private Icon skytapSuspendedIcon;
+        private Icon skytapRunningIcon;
 
         public Dashboard()
         {
@@ -28,6 +31,9 @@ namespace SkytapDesktop
             idleTimer.Elapsed += IdleTimerEvent;
             idleTimer.AutoReset = true;
             idleTimer.Enabled = true;
+            skytapIcon = new Icon("icons\\skytap.ico");
+            skytapSuspendedIcon = new Icon("icons\\skytap-suspended.ico");
+            skytapRunningIcon = new Icon("icons\\skytap-running.ico");
             InitializeComponent();
             AddTrayIcon();
             if (string.IsNullOrEmpty(Properties.Settings.Default.Username))
@@ -78,7 +84,7 @@ namespace SkytapDesktop
             trayIcon.Text = "SkyTap Desktop";
             trayIcon.BalloonTipTitle = "SkyTap Desktop minimizes to the taskbar";
             trayIcon.BalloonTipText = "Click to change your default configuration.  Right click to take actions on your default configuration.";
-            trayIcon.Icon = new Icon("icons\\skytap.ico");
+            trayIcon.Icon = skytapIcon;
 
             // Add menu to tray icon and show it.
             trayIcon.ContextMenu = trayMenu;
