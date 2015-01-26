@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.pnlDashboard = new System.Windows.Forms.Panel();
+            this.btnChangeState = new System.Windows.Forms.Button();
+            this.lblRunState = new System.Windows.Forms.Label();
             this.lblConfigStateTitle = new System.Windows.Forms.Label();
             this.llblConfig = new System.Windows.Forms.LinkLabel();
             this.lblSelectedConfig = new System.Windows.Forms.Label();
@@ -44,9 +46,6 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.txtToken = new System.Windows.Forms.TextBox();
             this.txtUsername = new System.Windows.Forms.TextBox();
-            this.lblRunState = new System.Windows.Forms.Label();
-            this.btnChangeState = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.pnlDashboard.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnlLogin.SuspendLayout();
@@ -54,7 +53,6 @@
             // 
             // pnlDashboard
             // 
-            this.pnlDashboard.Controls.Add(this.label1);
             this.pnlDashboard.Controls.Add(this.btnChangeState);
             this.pnlDashboard.Controls.Add(this.lblRunState);
             this.pnlDashboard.Controls.Add(this.lblConfigStateTitle);
@@ -67,6 +65,26 @@
             this.pnlDashboard.Name = "pnlDashboard";
             this.pnlDashboard.Size = new System.Drawing.Size(490, 454);
             this.pnlDashboard.TabIndex = 1;
+            // 
+            // btnChangeState
+            // 
+            this.btnChangeState.Location = new System.Drawing.Point(403, 69);
+            this.btnChangeState.Name = "btnChangeState";
+            this.btnChangeState.Size = new System.Drawing.Size(75, 23);
+            this.btnChangeState.TabIndex = 7;
+            this.btnChangeState.Text = "[change state]";
+            this.btnChangeState.UseVisualStyleBackColor = true;
+            this.btnChangeState.Visible = false;
+            this.btnChangeState.Click += new System.EventHandler(this.btnChangeState_Click);
+            // 
+            // lblRunState
+            // 
+            this.lblRunState.AutoSize = true;
+            this.lblRunState.Location = new System.Drawing.Point(162, 76);
+            this.lblRunState.Name = "lblRunState";
+            this.lblRunState.Size = new System.Drawing.Size(202, 13);
+            this.lblRunState.TabIndex = 6;
+            this.lblRunState.Text = "Please choose your default configuration.";
             // 
             // lblConfigStateTitle
             // 
@@ -194,34 +212,6 @@
             this.txtUsername.Size = new System.Drawing.Size(313, 20);
             this.txtUsername.TabIndex = 0;
             // 
-            // lblRunState
-            // 
-            this.lblRunState.AutoSize = true;
-            this.lblRunState.Location = new System.Drawing.Point(162, 76);
-            this.lblRunState.Name = "lblRunState";
-            this.lblRunState.Size = new System.Drawing.Size(38, 13);
-            this.lblRunState.TabIndex = 6;
-            this.lblRunState.Text = "[State]";
-            // 
-            // btnChangeState
-            // 
-            this.btnChangeState.Location = new System.Drawing.Point(403, 69);
-            this.btnChangeState.Name = "btnChangeState";
-            this.btnChangeState.Size = new System.Drawing.Size(75, 23);
-            this.btnChangeState.TabIndex = 7;
-            this.btnChangeState.Text = "[change state]";
-            this.btnChangeState.UseVisualStyleBackColor = true;
-            this.btnChangeState.Click += new System.EventHandler(this.btnChangeState_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 313);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "label1";
-            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -261,7 +251,6 @@
         private System.Windows.Forms.Label lblConfigStateTitle;
         private System.Windows.Forms.Label lblRunState;
         private System.Windows.Forms.Button btnChangeState;
-        private System.Windows.Forms.Label label1;
 
 
 

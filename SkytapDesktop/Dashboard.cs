@@ -133,6 +133,7 @@ namespace SkytapDesktop
         {
             Properties.Settings.Default.Username = "";
             Properties.Settings.Default.Token = "";
+            Properties.Settings.Default.DefaultConfigId = -1;
             Properties.Settings.Default.Save();
             pnlLogin.Show();
 
@@ -217,6 +218,7 @@ namespace SkytapDesktop
                     default:
                         break;
                 }
+                btnChangeState.Visible = true;
                 var trayString = Program.DefaultConfiguration.RunState + " - " + Program.DefaultConfiguration.Name;
                 if (trayString.Length > 64)
                 {
