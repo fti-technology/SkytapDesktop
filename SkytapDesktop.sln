@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkytapDesktop", "SkytapDesktop\SkytapDesktop.csproj", "{9BD7733F-38DF-42EB-8051-B4BB7222B521}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkytapApi", "SkytapApi\SkytapApi.csproj", "{673D838B-E529-4791-B613-C46D72482802}"

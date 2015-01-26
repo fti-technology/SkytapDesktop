@@ -22,7 +22,9 @@ namespace SkytapDesktop
         private ContextMenu trayMenu;
         private Icon skytapIcon;
         private Icon skytapSuspendedIcon;
+        private Icon skytapStoppedIcon;
         private Icon skytapRunningIcon;
+        
 
         public Dashboard()
         {
@@ -33,6 +35,7 @@ namespace SkytapDesktop
             idleTimer.Enabled = true;
             skytapIcon = new Icon("icons\\skytap.ico");
             skytapSuspendedIcon = new Icon("icons\\skytap-suspended.ico");
+            skytapStoppedIcon = new Icon("icons\\skytap-suspended.ico");
             skytapRunningIcon = new Icon("icons\\skytap-running.ico");
             InitializeComponent();
             AddTrayIcon();
@@ -54,7 +57,13 @@ namespace SkytapDesktop
 
         private void IdleTimerEvent(object sender, ElapsedEventArgs e)
         {
-            Debug.WriteLine(WindowsUtilities.GetIdleTickCount().ToString());
+            // This number (GetIdleTickCount()) will only rise if there is no user activity on this machine
+            // so if it is close to 0, and our config is running, go ahead a keep the config alive.
+            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCount() < 500)
+            {
+                Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
+                Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
+            }
         }
 
         private void TryLoadDefaultConfig()
@@ -157,7 +166,7 @@ namespace SkytapDesktop
                 Properties.Settings.Default.Username = "";
                 Properties.Settings.Default.Token = "";
                 Properties.Settings.Default.Save();
-                MessageBox.Show(ex.Message);
+                throw ex;
             }
 
             // else show error
@@ -195,17 +204,25 @@ namespace SkytapDesktop
                 {
                     case "running":
                         btnChangeState.Text = "Suspend";
+                        trayIcon.Icon = skytapRunningIcon;
                         break;
                     case "suspended":
                         btnChangeState.Text = "Run";
+                        trayIcon.Icon = skytapSuspendedIcon;
                         break;
                     case "stopped":
                         btnChangeState.Text = "Run";
+                        trayIcon.Icon = skytapStoppedIcon;
                         break;
                     default:
                         break;
                 }
-                trayIcon.Text = Program.DefaultConfiguration.Name + " " + Program.DefaultConfiguration.RunState;
+                var trayString = Program.DefaultConfiguration.RunState + " - " + Program.DefaultConfiguration.Name;
+                if (trayString.Length > 64)
+                {
+                    trayString = trayString.Substring(0, 63);
+                }
+                trayIcon.Text = trayString;
                 lblRunState.Text = Program.DefaultConfiguration.RunState;
             }
             catch (Exception ex)
@@ -213,7 +230,7 @@ namespace SkytapDesktop
                 Properties.Settings.Default.Username = "";
                 Properties.Settings.Default.Token = "";
                 Properties.Settings.Default.Save();
-                MessageBox.Show(ex.Message);
+                throw ex;
             }
 
         }
