@@ -236,6 +236,8 @@ namespace SkytapDesktop
                 llblConfig.Links.Add(link);
                 Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
                 Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
+                client.HydrateIPs(Program.DefaultConfiguration);
+                dgvVms.DataSource = Program.DefaultConfiguration.VMs;
                 OnRunningStateChanged(EventArgs.Empty);
             }
             else

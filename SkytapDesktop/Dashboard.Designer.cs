@@ -46,13 +46,18 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.txtToken = new System.Windows.Forms.TextBox();
             this.txtUsername = new System.Windows.Forms.TextBox();
+            this.lblVMs = new System.Windows.Forms.Label();
+            this.dgvVms = new System.Windows.Forms.DataGridView();
             this.pnlDashboard.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.pnlLogin.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlDashboard
             // 
+            this.pnlDashboard.Controls.Add(this.dgvVms);
+            this.pnlDashboard.Controls.Add(this.lblVMs);
             this.pnlDashboard.Controls.Add(this.btnChangeState);
             this.pnlDashboard.Controls.Add(this.lblRunState);
             this.pnlDashboard.Controls.Add(this.lblConfigStateTitle);
@@ -152,9 +157,9 @@
             // 
             this.lbConfigurations.DisplayMember = "Name";
             this.lbConfigurations.FormattingEnabled = true;
-            this.lbConfigurations.Location = new System.Drawing.Point(16, 97);
+            this.lbConfigurations.Location = new System.Drawing.Point(16, 112);
             this.lbConfigurations.Name = "lbConfigurations";
-            this.lbConfigurations.Size = new System.Drawing.Size(462, 199);
+            this.lbConfigurations.Size = new System.Drawing.Size(462, 147);
             this.lbConfigurations.TabIndex = 1;
             // 
             // pnlLogin
@@ -212,6 +217,27 @@
             this.txtUsername.Size = new System.Drawing.Size(313, 20);
             this.txtUsername.TabIndex = 0;
             // 
+            // lblVMs
+            // 
+            this.lblVMs.AutoSize = true;
+            this.lblVMs.Location = new System.Drawing.Point(16, 279);
+            this.lblVMs.Name = "lblVMs";
+            this.lblVMs.Size = new System.Drawing.Size(125, 13);
+            this.lblVMs.TabIndex = 8;
+            this.lblVMs.Text = "VMs in this configuration:";
+            // 
+            // dgvVms
+            // 
+            this.dgvVms.AllowUserToAddRows = false;
+            this.dgvVms.AllowUserToDeleteRows = false;
+            this.dgvVms.AllowUserToOrderColumns = true;
+            this.dgvVms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVms.Location = new System.Drawing.Point(19, 296);
+            this.dgvVms.Name = "dgvVms";
+            this.dgvVms.ReadOnly = true;
+            this.dgvVms.Size = new System.Drawing.Size(459, 102);
+            this.dgvVms.TabIndex = 9;
+            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -219,8 +245,9 @@
             this.ClientSize = new System.Drawing.Size(490, 454);
             this.Controls.Add(this.pnlDashboard);
             this.Controls.Add(this.pnlLogin);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Dashboard";
-            this.Text = "Form1";
+            this.Text = "Skytap Desktop";
             this.Resize += new System.EventHandler(this.Dashboard_Resize);
             this.pnlDashboard.ResumeLayout(false);
             this.pnlDashboard.PerformLayout();
@@ -228,6 +255,7 @@
             this.toolStrip1.PerformLayout();
             this.pnlLogin.ResumeLayout(false);
             this.pnlLogin.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -251,6 +279,8 @@
         private System.Windows.Forms.Label lblConfigStateTitle;
         private System.Windows.Forms.Label lblRunState;
         private System.Windows.Forms.Button btnChangeState;
+        private System.Windows.Forms.DataGridView dgvVms;
+        private System.Windows.Forms.Label lblVMs;
 
 
 

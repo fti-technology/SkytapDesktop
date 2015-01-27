@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -69,6 +70,7 @@ namespace SkytapApi
             }
             return configurations;
         }
+
         public Configuration GetConfiguration(int configurationId)
         {
             var url = BaseUrl + string.Format("/configurations/{0}", configurationId);
@@ -93,6 +95,14 @@ namespace SkytapApi
                             Error = configurationXml.Element("error").Value,
                             RunState = configurationXml.Element("runstate").Value
                         };
+                    List<VirtualMachine> vms = 
+                    configurationXml.Element("vms").Elements()
+                        .Select(x => new VirtualMachine()
+                        {
+                            Id = int.Parse(x.Element("id").Value),
+                            Name = x.Element("name").Value
+                        }).ToList();
+                    configuration.VMs = new BindingList<VirtualMachine>(vms);
                 }
                 else
                 {
@@ -106,7 +116,6 @@ namespace SkytapApi
         {
             var url = BaseUrl + string.Format("/configurations/{0}?runstate={1}", configurationId, runstate);
             var request = BuildWebRequest(url);
-            Configuration configuration;
             request.Method = "PUT";
             using (var response = (HttpWebResponse)request.GetResponse())
             {
@@ -117,6 +126,44 @@ namespace SkytapApi
                 else
                 {
                     throw new Exception(string.Format("Error in response from API: {0} {1}", response.StatusCode, response.StatusDescription));
+                }
+            }
+        }
+
+        public void HydrateIPs(Configuration configuration)
+        {
+            foreach (var virtualMachine in configuration.VMs)
+            {
+                var url = BaseUrl + string.Format("/configurations/{0}/vms/{1}", configuration.Id, virtualMachine.Id);
+                var request = BuildWebRequest(url);
+                request.Method = "GET";
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        try
+                        {
+                            XElement vmXml;
+                            using (var stream = response.GetResponseStream())
+                            using (var reader = new StreamReader(stream))
+                            {
+                                vmXml = XElement.Parse(reader.ReadToEnd());
+                            }
+                            virtualMachine.NatIP =
+                                vmXml.Element("interfaces")
+                                    .Element("interface")
+                                    .Element("nat_addresses")
+                                    .Element("vpn_nat_addresses")
+                                    .Element("vpn_nat_address")
+                                    .Element("ip_address")
+                                    .Value;
+                        }
+                        catch (Exception e) { }
+                    }
+                    else
+                    {
+                        throw new Exception(string.Format("Error in response from API: {0} {1}", response.StatusCode, response.StatusDescription));
+                    }
                 }
             }
         }
