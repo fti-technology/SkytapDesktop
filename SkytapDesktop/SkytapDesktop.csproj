@@ -120,6 +120,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icons\skytap-busy.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="icons\skytap-running.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
