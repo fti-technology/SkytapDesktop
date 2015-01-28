@@ -225,8 +225,8 @@ namespace SkytapDesktop
         private void IdleTimerEvent(object sender, EventArgs e)
         {
             // This number (GetIdleTickCount()) will only rise if there is no user activity on this machine
-            // so if it is under 20 seconds (20M ticks), and our config is running, go ahead a keep the config alive.
-            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCount() < 20000000)
+            // so if it is under 5 minutes (300M ticks), and our config is running, go ahead a keep the config alive.
+            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCount() < 300000000)
             {
                 Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
                 Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
