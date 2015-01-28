@@ -17,6 +17,8 @@ namespace SkytapDesktop
 {
     public partial class Dashboard : Form
     {
+        #region Private Variables
+
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
         private MenuItem configTitleMenuItem;
@@ -31,18 +33,11 @@ namespace SkytapDesktop
         private const string CONFIG_STOPPED = "stopped";
         private const string CONFIG_SUSPENDED = "suspended";
         private const string CONFIG_RUNNING = "running";
+        private const string HOSTFILE = @"C:\windows\system32\drivers\etc\hosts";
 
-        public event EventHandler RunningStateChanged;
+        #endregion
 
-        protected virtual void OnRunningStateChanged(EventArgs e)
-        {
-            EventHandler handler = RunningStateChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
+        #region Constructor
         public Dashboard()
         {
             // set up a 5 minute timer to check for idle
@@ -57,6 +52,7 @@ namespace SkytapDesktop
             skytapBusyIcon = new Icon("icons\\skytap-busy.ico");
             InitializeComponent();
             AddTrayIcon();
+            LoadHostsFile();
             RunningStateChanged += Dashboard_RunningStateChanged;
             if (string.IsNullOrEmpty(Properties.Settings.Default.Username))
             {
@@ -73,67 +69,25 @@ namespace SkytapDesktop
                 TryLoadDefaultConfig();
             }
         }
+        #endregion
 
+        #region Event Related
+
+        public event EventHandler RunningStateChanged;
+
+        protected virtual void OnRunningStateChanged(EventArgs e)
+        {
+            EventHandler handler = RunningStateChanged;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
         void Dashboard_RunningStateChanged(object sender, EventArgs e)
         {
             SetConfigStateUIElements();
         }
 
-        private void IdleTimerEvent(object sender, EventArgs e)
-        {
-            // This number (GetIdleTickCount()) will only rise if there is no user activity on this machine
-            // so if it is under 20 seconds (20M ticks), and our config is running, go ahead a keep the config alive.
-            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCount() < 20000000)
-            {
-                Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
-                Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
-            }
-        }
-
-        private void TryLoadDefaultConfig()
-        {
-            if (Properties.Settings.Default.DefaultConfigId > 0)
-            {
-                var selectedConfig =
-                    Program.Configurations.Single(x => x.Id == Properties.Settings.Default.DefaultConfigId);
-                var index = lbConfigurations.FindString(selectedConfig.Name);
-                if (index > 0)
-                {
-                    lbConfigurations.SetSelected(index, true);
-                }
-            }
-        }
-
-        public void AddTrayIcon()
-        {
-            trayMenu = new ContextMenu();
-            stateChangeMenuItem = new MenuItem("No Configuration Chosen", OnTrayStateChangeClick);
-            stateChangeMenuItem.Visible = false;
-            refreshState = new MenuItem("Refresh Current State", OnTrayRefreshClick);
-            refreshState.Visible = false;
-            configTitleMenuItem = new MenuItem("No Configuration Chosen", openForm);
-            configTitleMenuItem.DefaultItem = true;
-            trayMenu.MenuItems.Add(configTitleMenuItem);
-            trayMenu.MenuItems.Add("-");
-            trayMenu.MenuItems.Add(stateChangeMenuItem);
-            trayMenu.MenuItems.Add(refreshState);
-            trayMenu.MenuItems.Add("Exit", OnExit);
-
-            // Create a tray icon. In this example we use a
-            // standard system icon for simplicity, but you
-            // can of course use your own custom icon too.
-            trayIcon = new NotifyIcon();
-            trayIcon.Text = "SkyTap Desktop";
-            trayIcon.BalloonTipTitle = "SkyTap Desktop minimizes to the taskbar";
-            trayIcon.BalloonTipText = "Click to change your default configuration.  Right click to take actions on your default configuration.";
-            trayIcon.Icon = skytapIcon;
-
-            // Add menu to tray icon and show it.
-            trayIcon.ContextMenu = trayMenu;
-            trayIcon.Visible = true;
-            trayIcon.Click += openForm;
-            trayIcon.DoubleClick += openForm;
-        }
         private void OnTrayRefreshClick(object sender, EventArgs eventArgs)
         {
             SetOrRefreshConfig();
@@ -150,6 +104,7 @@ namespace SkytapDesktop
             trayIcon.ShowBalloonTip(500);
             this.Hide();
         }
+
 
         void openForm(object sender, EventArgs e)
         {
@@ -191,6 +146,121 @@ namespace SkytapDesktop
         private void lbConfigurations_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetOrRefreshConfig();
+        }
+
+        private void llblConfig_Click(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+            var configLink = e.Link.LinkData as string;
+            Process.Start(configLink);
+        }
+
+        private void btnChangeState_Click(object sender, EventArgs e)
+        {
+            ChangeRunningState();
+        }
+
+
+        private void MonitorBusyTimerEvent(object sender, EventArgs e)
+        {
+            Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
+            Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
+
+            if (Program.DefaultConfiguration.RunState == CONFIG_RUNNING ||
+                Program.DefaultConfiguration.RunState == CONFIG_STOPPED ||
+                Program.DefaultConfiguration.RunState == CONFIG_SUSPENDED)
+            {
+                monitorBusyTimer.Enabled = false;
+                OnRunningStateChanged(EventArgs.Empty);
+            }
+        }
+
+        private void btnUpdateHosts_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                File.WriteAllText(HOSTFILE, txtHostsFile.Text);
+                MessageBox.Show("Host file Updated");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving to host file: " + ex.Message);
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void LoadHostsFile()
+        {
+            try
+            {
+                var text = File.ReadAllText(HOSTFILE);
+                txtHostsFile.Text = text;
+            }
+            catch (Exception)
+            {
+                txtHostsFile.Enabled = false;
+                btnUpdateHosts.Enabled = false;
+            }
+        }
+        
+        private void IdleTimerEvent(object sender, EventArgs e)
+        {
+            // This number (GetIdleTickCount()) will only rise if there is no user activity on this machine
+            // so if it is under 20 seconds (20M ticks), and our config is running, go ahead a keep the config alive.
+            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCount() < 20000000)
+            {
+                Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
+                Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
+            }
+        }
+
+        private void TryLoadDefaultConfig()
+        {
+            if (Properties.Settings.Default.DefaultConfigId > 0)
+            {
+                var selectedConfig =
+                    Program.Configurations.Single(x => x.Id == Properties.Settings.Default.DefaultConfigId);
+                var index = lbConfigurations.FindString(selectedConfig.Name);
+                if (index > 0)
+                {
+                    lbConfigurations.SetSelected(index, true);
+                }
+            }
+        }
+
+        private void AddTrayIcon()
+        {
+            trayMenu = new ContextMenu();
+            stateChangeMenuItem = new MenuItem("No Configuration Chosen", OnTrayStateChangeClick);
+            stateChangeMenuItem.Visible = false;
+            refreshState = new MenuItem("Refresh Current State", OnTrayRefreshClick);
+            refreshState.Visible = false;
+            configTitleMenuItem = new MenuItem("No Configuration Chosen", openForm);
+            configTitleMenuItem.DefaultItem = true;
+            trayMenu.MenuItems.Add(configTitleMenuItem);
+            trayMenu.MenuItems.Add("-");
+            trayMenu.MenuItems.Add(stateChangeMenuItem);
+            trayMenu.MenuItems.Add(refreshState);
+            trayMenu.MenuItems.Add("Exit", OnExit);
+
+            // Create a tray icon. In this example we use a
+            // standard system icon for simplicity, but you
+            // can of course use your own custom icon too.
+            trayIcon = new NotifyIcon();
+            trayIcon.Text = "SkyTap Desktop";
+            trayIcon.BalloonTipTitle = "SkyTap Desktop minimizes to the taskbar";
+            trayIcon.BalloonTipText = "Click to change your default configuration.  Right click to take actions on your default configuration.";
+            trayIcon.Icon = skytapIcon;
+
+            // Add menu to tray icon and show it.
+            trayIcon.ContextMenu = trayMenu;
+            trayIcon.Visible = true;
+            trayIcon.Click += openForm;
+            trayIcon.DoubleClick += openForm;
         }
 
         private void DoLogin()
@@ -322,18 +392,6 @@ namespace SkytapDesktop
             trayIcon.Text = trayString;
         }
 
-        private void llblConfig_Click(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-            var configLink = e.Link.LinkData as string;
-            Process.Start(configLink);
-        }
-
-        private void btnChangeState_Click(object sender, EventArgs e)
-        {
-            ChangeRunningState();
-        }
-
         private void ChangeRunningState()
         {
             Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
@@ -366,19 +424,7 @@ namespace SkytapDesktop
             monitorBusyTimer.Enabled = true;
         }
 
-        private void MonitorBusyTimerEvent(object sender, EventArgs e)
-        {
-            Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
-            Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
-
-            if (Program.DefaultConfiguration.RunState == CONFIG_RUNNING ||
-                Program.DefaultConfiguration.RunState == CONFIG_STOPPED ||
-                Program.DefaultConfiguration.RunState == CONFIG_SUSPENDED)
-            {
-                monitorBusyTimer.Enabled = false;
-                OnRunningStateChanged(EventArgs.Empty);
-            }
-        }
+        #endregion
 
     }
 }

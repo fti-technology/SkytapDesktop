@@ -30,6 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.pnlDashboard = new System.Windows.Forms.Panel();
+            this.dgvVms = new System.Windows.Forms.DataGridView();
+            this.lblVMs = new System.Windows.Forms.Label();
             this.btnChangeState = new System.Windows.Forms.Button();
             this.lblRunState = new System.Windows.Forms.Label();
             this.lblConfigStateTitle = new System.Windows.Forms.Label();
@@ -46,16 +48,20 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.txtToken = new System.Windows.Forms.TextBox();
             this.txtUsername = new System.Windows.Forms.TextBox();
-            this.lblVMs = new System.Windows.Forms.Label();
-            this.dgvVms = new System.Windows.Forms.DataGridView();
+            this.lblHosts = new System.Windows.Forms.Label();
+            this.txtHostsFile = new System.Windows.Forms.TextBox();
+            this.btnUpdateHosts = new System.Windows.Forms.Button();
             this.pnlDashboard.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.pnlLogin.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlDashboard
             // 
+            this.pnlDashboard.Controls.Add(this.btnUpdateHosts);
+            this.pnlDashboard.Controls.Add(this.txtHostsFile);
+            this.pnlDashboard.Controls.Add(this.lblHosts);
             this.pnlDashboard.Controls.Add(this.dgvVms);
             this.pnlDashboard.Controls.Add(this.lblVMs);
             this.pnlDashboard.Controls.Add(this.btnChangeState);
@@ -68,8 +74,29 @@
             this.pnlDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlDashboard.Location = new System.Drawing.Point(0, 0);
             this.pnlDashboard.Name = "pnlDashboard";
-            this.pnlDashboard.Size = new System.Drawing.Size(490, 454);
+            this.pnlDashboard.Size = new System.Drawing.Size(501, 670);
             this.pnlDashboard.TabIndex = 1;
+            // 
+            // dgvVms
+            // 
+            this.dgvVms.AllowUserToAddRows = false;
+            this.dgvVms.AllowUserToDeleteRows = false;
+            this.dgvVms.AllowUserToOrderColumns = true;
+            this.dgvVms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVms.Location = new System.Drawing.Point(19, 296);
+            this.dgvVms.Name = "dgvVms";
+            this.dgvVms.ReadOnly = true;
+            this.dgvVms.Size = new System.Drawing.Size(459, 102);
+            this.dgvVms.TabIndex = 9;
+            // 
+            // lblVMs
+            // 
+            this.lblVMs.AutoSize = true;
+            this.lblVMs.Location = new System.Drawing.Point(16, 279);
+            this.lblVMs.Name = "lblVMs";
+            this.lblVMs.Size = new System.Drawing.Size(125, 13);
+            this.lblVMs.TabIndex = 8;
+            this.lblVMs.Text = "VMs in this configuration:";
             // 
             // btnChangeState
             // 
@@ -126,7 +153,7 @@
             this.btnLogout});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(490, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(501, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -172,7 +199,7 @@
             this.pnlLogin.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlLogin.Location = new System.Drawing.Point(0, 0);
             this.pnlLogin.Name = "pnlLogin";
-            this.pnlLogin.Size = new System.Drawing.Size(490, 454);
+            this.pnlLogin.Size = new System.Drawing.Size(501, 670);
             this.pnlLogin.TabIndex = 0;
             // 
             // btnLogin
@@ -217,32 +244,39 @@
             this.txtUsername.Size = new System.Drawing.Size(313, 20);
             this.txtUsername.TabIndex = 0;
             // 
-            // lblVMs
+            // lblHosts
             // 
-            this.lblVMs.AutoSize = true;
-            this.lblVMs.Location = new System.Drawing.Point(16, 279);
-            this.lblVMs.Name = "lblVMs";
-            this.lblVMs.Size = new System.Drawing.Size(125, 13);
-            this.lblVMs.TabIndex = 8;
-            this.lblVMs.Text = "VMs in this configuration:";
+            this.lblHosts.AutoSize = true;
+            this.lblHosts.Location = new System.Drawing.Point(19, 420);
+            this.lblHosts.Name = "lblHosts";
+            this.lblHosts.Size = new System.Drawing.Size(53, 13);
+            this.lblHosts.TabIndex = 10;
+            this.lblHosts.Text = "Hosts File";
             // 
-            // dgvVms
+            // txtHostsFile
             // 
-            this.dgvVms.AllowUserToAddRows = false;
-            this.dgvVms.AllowUserToDeleteRows = false;
-            this.dgvVms.AllowUserToOrderColumns = true;
-            this.dgvVms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVms.Location = new System.Drawing.Point(19, 296);
-            this.dgvVms.Name = "dgvVms";
-            this.dgvVms.ReadOnly = true;
-            this.dgvVms.Size = new System.Drawing.Size(459, 102);
-            this.dgvVms.TabIndex = 9;
+            this.txtHostsFile.Location = new System.Drawing.Point(22, 437);
+            this.txtHostsFile.Multiline = true;
+            this.txtHostsFile.Name = "txtHostsFile";
+            this.txtHostsFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtHostsFile.Size = new System.Drawing.Size(456, 168);
+            this.txtHostsFile.TabIndex = 11;
+            // 
+            // btnUpdateHosts
+            // 
+            this.btnUpdateHosts.Location = new System.Drawing.Point(334, 611);
+            this.btnUpdateHosts.Name = "btnUpdateHosts";
+            this.btnUpdateHosts.Size = new System.Drawing.Size(144, 23);
+            this.btnUpdateHosts.TabIndex = 12;
+            this.btnUpdateHosts.Text = "Update Hosts File";
+            this.btnUpdateHosts.UseVisualStyleBackColor = true;
+            this.btnUpdateHosts.Click += new System.EventHandler(this.btnUpdateHosts_Click);
             // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(490, 454);
+            this.ClientSize = new System.Drawing.Size(501, 670);
             this.Controls.Add(this.pnlDashboard);
             this.Controls.Add(this.pnlLogin);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -251,11 +285,11 @@
             this.Resize += new System.EventHandler(this.Dashboard_Resize);
             this.pnlDashboard.ResumeLayout(false);
             this.pnlDashboard.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.pnlLogin.ResumeLayout(false);
             this.pnlLogin.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -281,6 +315,9 @@
         private System.Windows.Forms.Button btnChangeState;
         private System.Windows.Forms.DataGridView dgvVms;
         private System.Windows.Forms.Label lblVMs;
+        private System.Windows.Forms.Button btnUpdateHosts;
+        private System.Windows.Forms.TextBox txtHostsFile;
+        private System.Windows.Forms.Label lblHosts;
 
 
 
