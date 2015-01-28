@@ -51,6 +51,7 @@
             this.lblHosts = new System.Windows.Forms.Label();
             this.txtHostsFile = new System.Windows.Forms.TextBox();
             this.btnUpdateHosts = new System.Windows.Forms.Button();
+            this.cbRunOnStart = new System.Windows.Forms.CheckBox();
             this.pnlDashboard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -59,6 +60,7 @@
             // 
             // pnlDashboard
             // 
+            this.pnlDashboard.Controls.Add(this.cbRunOnStart);
             this.pnlDashboard.Controls.Add(this.btnUpdateHosts);
             this.pnlDashboard.Controls.Add(this.txtHostsFile);
             this.pnlDashboard.Controls.Add(this.lblHosts);
@@ -272,6 +274,17 @@
             this.btnUpdateHosts.UseVisualStyleBackColor = true;
             this.btnUpdateHosts.Click += new System.EventHandler(this.btnUpdateHosts_Click);
             // 
+            // cbRunOnStart
+            // 
+            this.cbRunOnStart.AutoSize = true;
+            this.cbRunOnStart.Location = new System.Drawing.Point(16, 29);
+            this.cbRunOnStart.Name = "cbRunOnStart";
+            this.cbRunOnStart.Size = new System.Drawing.Size(136, 17);
+            this.cbRunOnStart.TabIndex = 13;
+            this.cbRunOnStart.Text = "Run this app on startup";
+            this.cbRunOnStart.UseVisualStyleBackColor = true;
+            this.cbRunOnStart.CheckedChanged += new System.EventHandler(this.cbRunOnStart_CheckedChanged);
+            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,6 +331,7 @@
         private System.Windows.Forms.Button btnUpdateHosts;
         private System.Windows.Forms.TextBox txtHostsFile;
         private System.Windows.Forms.Label lblHosts;
+        private System.Windows.Forms.CheckBox cbRunOnStart;
 
 
 

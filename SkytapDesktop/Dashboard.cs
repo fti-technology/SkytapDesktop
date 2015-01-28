@@ -11,6 +11,7 @@ using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using SkytapApi;
 
 namespace SkytapDesktop
@@ -34,6 +35,7 @@ namespace SkytapDesktop
         private const string CONFIG_SUSPENDED = "suspended";
         private const string CONFIG_RUNNING = "running";
         private const string HOSTFILE = @"C:\windows\system32\drivers\etc\hosts";
+        private const string REGKEY = "SkytapDesktop";
 
         #endregion
 
@@ -51,6 +53,19 @@ namespace SkytapDesktop
             skytapRunningIcon = new Icon("icons\\skytap-running.ico");
             skytapBusyIcon = new Icon("icons\\skytap-busy.ico");
             InitializeComponent();
+            RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            string appPath = Application.ExecutablePath.ToString();
+
+            cbRunOnStart.Checked = (rkApp.GetValue(REGKEY) == null);
+
+            if (rkApp.GetValue(REGKEY) == null)
+            {
+                rkApp.SetValue(REGKEY, appPath);
+            }
+            else
+            {
+                rkApp.DeleteValue(REGKEY, false);
+            } 
             AddTrayIcon();
             LoadHostsFile();
             RunningStateChanged += Dashboard_RunningStateChanged;
@@ -425,6 +440,22 @@ namespace SkytapDesktop
         }
 
         #endregion
+
+        private void cbRunOnStart_CheckedChanged(object sender, EventArgs e)
+        {
+            RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            string appPath = Application.ExecutablePath.ToString();
+
+
+            if (cbRunOnStart.Checked)
+            {
+                rkApp.SetValue(REGKEY, appPath);
+            }
+            else
+            {
+                rkApp.DeleteValue(REGKEY, false);
+            } 
+        }
 
     }
 }
