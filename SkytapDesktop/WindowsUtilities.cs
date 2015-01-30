@@ -29,12 +29,12 @@ namespace SkytapDesktop
         /// Idle time in ticks
         /// </summary>
         /// <returns></returns>
-        public static uint GetIdleTickCount()
+        public static uint GetIdleTickCountInMs()
         {
             return ((uint)Environment.TickCount - GetLastInputTime());
         }
         /// <summary>
-        /// Last input time in ticks
+        /// Last input time in ms
         /// </summary>
         /// <returns></returns>
         public static uint GetLastInputTime()

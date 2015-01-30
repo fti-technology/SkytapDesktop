@@ -44,7 +44,7 @@ namespace SkytapDesktop
         {
             // set up a 5 minute timer to check for idle
             var idleTimer = new Timer();
-            idleTimer.Interval = 300000;
+            idleTimer.Interval = 350000;
             idleTimer.Tick += IdleTimerEvent;
             idleTimer.Enabled = true;
             skytapIcon = new Icon("icons\\skytap.ico");
@@ -56,7 +56,7 @@ namespace SkytapDesktop
             RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             string appPath = Application.ExecutablePath.ToString();
 
-            cbRunOnStart.Checked = (rkApp.GetValue(REGKEY) == null);
+            cbRunOnStart.Checked = !(rkApp.GetValue(REGKEY) == null);
 
             if (rkApp.GetValue(REGKEY) == null)
             {
@@ -224,9 +224,9 @@ namespace SkytapDesktop
         
         private void IdleTimerEvent(object sender, EventArgs e)
         {
-            // This number (GetIdleTickCount()) will only rise if there is no user activity on this machine
-            // so if it is under 5 minutes (300M ticks), and our config is running, go ahead a keep the config alive.
-            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCount() < 300000000)
+            // This number (GetIdleTickCountInMs()) will only rise if there is no user activity on this machine
+            // so if it is under 5 minutes (300k ticks), and our config is running, go ahead a keep the config alive.
+            if (Program.DefaultConfiguration.RunState == "running" && WindowsUtilities.GetIdleTickCountInMs() < 300000)
             {
                 Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
                 Program.DefaultConfiguration = client.GetConfiguration(Program.DefaultConfiguration.Id);
