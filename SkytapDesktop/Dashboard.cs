@@ -36,6 +36,7 @@ namespace SkytapDesktop
         private const string CONFIG_RUNNING = "running";
         private const string HOSTFILE = @"C:\windows\system32\drivers\etc\hosts";
         private const string REGKEY = "SkytapDesktop";
+        private BindingSource configsSource = new BindingSource();
 
         #endregion
 
@@ -115,21 +116,32 @@ namespace SkytapDesktop
 
         private void Dashboard_Resize(object sender, EventArgs e)
         {
-            trayIcon.Visible = true;
-            trayIcon.ShowBalloonTip(500);
-            this.Hide();
+            if (Properties.Settings.Default.initialLoad)
+            {
+                trayIcon.Visible = true;
+                trayIcon.ShowBalloonTip(500);
+                Properties.Settings.Default.initialLoad = false;
+                Properties.Settings.Default.Save();
+            }
+            if (WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
+            }
         }
 
 
         void openForm(object sender, EventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
+            var mouseEvent = e as MouseEventArgs;
+            if (mouseEvent != null && mouseEvent.Button == MouseButtons.Left)
+            {
+                this.Show();
+                this.WindowState = FormWindowState.Normal;
+            }
         }
 
         private void OnExit(object sender, EventArgs e)
         {
-            trayIcon.Visible = false;
             Application.Exit();
         }
 
@@ -240,7 +252,7 @@ namespace SkytapDesktop
                 var selectedConfig =
                     Program.Configurations.Single(x => x.Id == Properties.Settings.Default.DefaultConfigId);
                 var index = lbConfigurations.FindString(selectedConfig.Name);
-                if (index > 0)
+                if (index >= 0)
                 {
                     lbConfigurations.SetSelected(index, true);
                 }
@@ -284,11 +296,7 @@ namespace SkytapDesktop
 
             try
             {
-                Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
-                Program.Configurations = client.GetConfigurations().OrderBy(x => x.Name).ToList();
-                lbConfigurations.DataSource = Program.Configurations;
-                lbConfigurations.SelectedIndex = -1;
-                lbConfigurations.SelectedIndexChanged += lbConfigurations_SelectedIndexChanged;
+                RefreshList();
                 SetOrRefreshConfig();
                 lblLoggedInAs.Text = Properties.Settings.Default.Username;
                 pnlLogin.Hide();
@@ -303,6 +311,19 @@ namespace SkytapDesktop
             }
 
             // else show error
+        }
+
+        private void RefreshList(bool rebind = true)
+        {
+            Client client = new Client(Properties.Settings.Default.Username, Properties.Settings.Default.Token);
+            Program.Configurations = client.GetConfigurations().OrderBy(x => x.Name).ToList();
+            configsSource.DataSource = Program.Configurations;
+            if (rebind)
+            {
+                lbConfigurations.DataSource = configsSource;
+                lbConfigurations.SelectedIndex = -1;
+                lbConfigurations.SelectedIndexChanged += lbConfigurations_SelectedIndexChanged;
+            }
         }
 
         private void SetOrRefreshConfig()
@@ -455,6 +476,21 @@ namespace SkytapDesktop
             {
                 rkApp.DeleteValue(REGKEY, false);
             } 
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            btnRefresh.Text = "refreshing...";
+            btnRefresh.Enabled = false;
+            RefreshList(false);
+            SetOrRefreshConfig();
+            btnRefresh.Enabled = true;
+            btnRefresh.Text = "Refresh";
+        }
+
+        private void Dashboard_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            trayIcon.Visible = false;
         }
 
     }

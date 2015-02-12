@@ -30,13 +30,15 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.pnlDashboard = new System.Windows.Forms.Panel();
+            this.cbRunOnStart = new System.Windows.Forms.CheckBox();
+            this.btnUpdateHosts = new System.Windows.Forms.Button();
+            this.txtHostsFile = new System.Windows.Forms.TextBox();
+            this.lblHosts = new System.Windows.Forms.Label();
             this.dgvVms = new System.Windows.Forms.DataGridView();
             this.lblVMs = new System.Windows.Forms.Label();
             this.btnChangeState = new System.Windows.Forms.Button();
             this.lblRunState = new System.Windows.Forms.Label();
-            this.lblConfigStateTitle = new System.Windows.Forms.Label();
             this.llblConfig = new System.Windows.Forms.LinkLabel();
-            this.lblSelectedConfig = new System.Windows.Forms.Label();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.lblLoggedInAs = new System.Windows.Forms.ToolStripLabel();
@@ -48,29 +50,25 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.txtToken = new System.Windows.Forms.TextBox();
             this.txtUsername = new System.Windows.Forms.TextBox();
-            this.lblHosts = new System.Windows.Forms.Label();
-            this.txtHostsFile = new System.Windows.Forms.TextBox();
-            this.btnUpdateHosts = new System.Windows.Forms.Button();
-            this.cbRunOnStart = new System.Windows.Forms.CheckBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.gbConfigStatusTitle = new System.Windows.Forms.GroupBox();
             this.pnlDashboard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVms)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.pnlLogin.SuspendLayout();
+            this.gbConfigStatusTitle.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlDashboard
             // 
+            this.pnlDashboard.Controls.Add(this.gbConfigStatusTitle);
+            this.pnlDashboard.Controls.Add(this.btnRefresh);
             this.pnlDashboard.Controls.Add(this.cbRunOnStart);
             this.pnlDashboard.Controls.Add(this.btnUpdateHosts);
             this.pnlDashboard.Controls.Add(this.txtHostsFile);
             this.pnlDashboard.Controls.Add(this.lblHosts);
             this.pnlDashboard.Controls.Add(this.dgvVms);
             this.pnlDashboard.Controls.Add(this.lblVMs);
-            this.pnlDashboard.Controls.Add(this.btnChangeState);
-            this.pnlDashboard.Controls.Add(this.lblRunState);
-            this.pnlDashboard.Controls.Add(this.lblConfigStateTitle);
-            this.pnlDashboard.Controls.Add(this.llblConfig);
-            this.pnlDashboard.Controls.Add(this.lblSelectedConfig);
             this.pnlDashboard.Controls.Add(this.toolStrip1);
             this.pnlDashboard.Controls.Add(this.lbConfigurations);
             this.pnlDashboard.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -79,13 +77,52 @@
             this.pnlDashboard.Size = new System.Drawing.Size(501, 670);
             this.pnlDashboard.TabIndex = 1;
             // 
+            // cbRunOnStart
+            // 
+            this.cbRunOnStart.AutoSize = true;
+            this.cbRunOnStart.Location = new System.Drawing.Point(16, 29);
+            this.cbRunOnStart.Name = "cbRunOnStart";
+            this.cbRunOnStart.Size = new System.Drawing.Size(136, 17);
+            this.cbRunOnStart.TabIndex = 13;
+            this.cbRunOnStart.Text = "Run this app on startup";
+            this.cbRunOnStart.UseVisualStyleBackColor = true;
+            this.cbRunOnStart.CheckedChanged += new System.EventHandler(this.cbRunOnStart_CheckedChanged);
+            // 
+            // btnUpdateHosts
+            // 
+            this.btnUpdateHosts.Location = new System.Drawing.Point(334, 635);
+            this.btnUpdateHosts.Name = "btnUpdateHosts";
+            this.btnUpdateHosts.Size = new System.Drawing.Size(144, 23);
+            this.btnUpdateHosts.TabIndex = 12;
+            this.btnUpdateHosts.Text = "Update Hosts File";
+            this.btnUpdateHosts.UseVisualStyleBackColor = true;
+            this.btnUpdateHosts.Click += new System.EventHandler(this.btnUpdateHosts_Click);
+            // 
+            // txtHostsFile
+            // 
+            this.txtHostsFile.Location = new System.Drawing.Point(22, 461);
+            this.txtHostsFile.Multiline = true;
+            this.txtHostsFile.Name = "txtHostsFile";
+            this.txtHostsFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtHostsFile.Size = new System.Drawing.Size(456, 168);
+            this.txtHostsFile.TabIndex = 11;
+            // 
+            // lblHosts
+            // 
+            this.lblHosts.AutoSize = true;
+            this.lblHosts.Location = new System.Drawing.Point(19, 444);
+            this.lblHosts.Name = "lblHosts";
+            this.lblHosts.Size = new System.Drawing.Size(53, 13);
+            this.lblHosts.TabIndex = 10;
+            this.lblHosts.Text = "Hosts File";
+            // 
             // dgvVms
             // 
             this.dgvVms.AllowUserToAddRows = false;
             this.dgvVms.AllowUserToDeleteRows = false;
             this.dgvVms.AllowUserToOrderColumns = true;
             this.dgvVms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVms.Location = new System.Drawing.Point(19, 296);
+            this.dgvVms.Location = new System.Drawing.Point(19, 320);
             this.dgvVms.Name = "dgvVms";
             this.dgvVms.ReadOnly = true;
             this.dgvVms.Size = new System.Drawing.Size(459, 102);
@@ -94,7 +131,7 @@
             // lblVMs
             // 
             this.lblVMs.AutoSize = true;
-            this.lblVMs.Location = new System.Drawing.Point(16, 279);
+            this.lblVMs.Location = new System.Drawing.Point(16, 303);
             this.lblVMs.Name = "lblVMs";
             this.lblVMs.Size = new System.Drawing.Size(125, 13);
             this.lblVMs.TabIndex = 8;
@@ -102,7 +139,7 @@
             // 
             // btnChangeState
             // 
-            this.btnChangeState.Location = new System.Drawing.Point(403, 69);
+            this.btnChangeState.Location = new System.Drawing.Point(6, 34);
             this.btnChangeState.Name = "btnChangeState";
             this.btnChangeState.Size = new System.Drawing.Size(75, 23);
             this.btnChangeState.TabIndex = 7;
@@ -114,38 +151,20 @@
             // lblRunState
             // 
             this.lblRunState.AutoSize = true;
-            this.lblRunState.Location = new System.Drawing.Point(162, 76);
+            this.lblRunState.Location = new System.Drawing.Point(87, 38);
             this.lblRunState.Name = "lblRunState";
             this.lblRunState.Size = new System.Drawing.Size(202, 13);
             this.lblRunState.TabIndex = 6;
             this.lblRunState.Text = "Please choose your default configuration.";
             // 
-            // lblConfigStateTitle
-            // 
-            this.lblConfigStateTitle.AutoSize = true;
-            this.lblConfigStateTitle.Location = new System.Drawing.Point(13, 76);
-            this.lblConfigStateTitle.Name = "lblConfigStateTitle";
-            this.lblConfigStateTitle.Size = new System.Drawing.Size(142, 13);
-            this.lblConfigStateTitle.TabIndex = 5;
-            this.lblConfigStateTitle.Text = "Current Configuration Status:";
-            // 
             // llblConfig
             // 
             this.llblConfig.AutoSize = true;
-            this.llblConfig.Location = new System.Drawing.Point(145, 55);
+            this.llblConfig.Location = new System.Drawing.Point(11, 18);
             this.llblConfig.Name = "llblConfig";
             this.llblConfig.Size = new System.Drawing.Size(0, 13);
             this.llblConfig.TabIndex = 4;
             this.llblConfig.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblConfig_Click);
-            // 
-            // lblSelectedConfig
-            // 
-            this.lblSelectedConfig.AutoSize = true;
-            this.lblSelectedConfig.Location = new System.Drawing.Point(13, 55);
-            this.lblSelectedConfig.Name = "lblSelectedConfig";
-            this.lblSelectedConfig.Size = new System.Drawing.Size(126, 13);
-            this.lblSelectedConfig.TabIndex = 3;
-            this.lblSelectedConfig.Text = "My Default Configuration:";
             // 
             // toolStrip1
             // 
@@ -186,7 +205,7 @@
             // 
             this.lbConfigurations.DisplayMember = "Name";
             this.lbConfigurations.FormattingEnabled = true;
-            this.lbConfigurations.Location = new System.Drawing.Point(16, 112);
+            this.lbConfigurations.Location = new System.Drawing.Point(16, 146);
             this.lbConfigurations.Name = "lbConfigurations";
             this.lbConfigurations.Size = new System.Drawing.Size(462, 147);
             this.lbConfigurations.TabIndex = 1;
@@ -246,44 +265,27 @@
             this.txtUsername.Size = new System.Drawing.Size(313, 20);
             this.txtUsername.TabIndex = 0;
             // 
-            // lblHosts
+            // btnRefresh
             // 
-            this.lblHosts.AutoSize = true;
-            this.lblHosts.Location = new System.Drawing.Point(19, 420);
-            this.lblHosts.Name = "lblHosts";
-            this.lblHosts.Size = new System.Drawing.Size(53, 13);
-            this.lblHosts.TabIndex = 10;
-            this.lblHosts.Text = "Hosts File";
+            this.btnRefresh.Location = new System.Drawing.Point(403, 29);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.TabIndex = 14;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // txtHostsFile
+            // gbConfigStatusTitle
             // 
-            this.txtHostsFile.Location = new System.Drawing.Point(22, 437);
-            this.txtHostsFile.Multiline = true;
-            this.txtHostsFile.Name = "txtHostsFile";
-            this.txtHostsFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtHostsFile.Size = new System.Drawing.Size(456, 168);
-            this.txtHostsFile.TabIndex = 11;
-            // 
-            // btnUpdateHosts
-            // 
-            this.btnUpdateHosts.Location = new System.Drawing.Point(334, 611);
-            this.btnUpdateHosts.Name = "btnUpdateHosts";
-            this.btnUpdateHosts.Size = new System.Drawing.Size(144, 23);
-            this.btnUpdateHosts.TabIndex = 12;
-            this.btnUpdateHosts.Text = "Update Hosts File";
-            this.btnUpdateHosts.UseVisualStyleBackColor = true;
-            this.btnUpdateHosts.Click += new System.EventHandler(this.btnUpdateHosts_Click);
-            // 
-            // cbRunOnStart
-            // 
-            this.cbRunOnStart.AutoSize = true;
-            this.cbRunOnStart.Location = new System.Drawing.Point(16, 29);
-            this.cbRunOnStart.Name = "cbRunOnStart";
-            this.cbRunOnStart.Size = new System.Drawing.Size(136, 17);
-            this.cbRunOnStart.TabIndex = 13;
-            this.cbRunOnStart.Text = "Run this app on startup";
-            this.cbRunOnStart.UseVisualStyleBackColor = true;
-            this.cbRunOnStart.CheckedChanged += new System.EventHandler(this.cbRunOnStart_CheckedChanged);
+            this.gbConfigStatusTitle.Controls.Add(this.lblRunState);
+            this.gbConfigStatusTitle.Controls.Add(this.btnChangeState);
+            this.gbConfigStatusTitle.Controls.Add(this.llblConfig);
+            this.gbConfigStatusTitle.Location = new System.Drawing.Point(16, 74);
+            this.gbConfigStatusTitle.Name = "gbConfigStatusTitle";
+            this.gbConfigStatusTitle.Size = new System.Drawing.Size(462, 61);
+            this.gbConfigStatusTitle.TabIndex = 15;
+            this.gbConfigStatusTitle.TabStop = false;
+            this.gbConfigStatusTitle.Text = "My Configuration";
             // 
             // Dashboard
             // 
@@ -295,6 +297,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Dashboard";
             this.Text = "Skytap Desktop";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Dashboard_FormClosed);
             this.Resize += new System.EventHandler(this.Dashboard_Resize);
             this.pnlDashboard.ResumeLayout(false);
             this.pnlDashboard.PerformLayout();
@@ -303,6 +306,8 @@
             this.toolStrip1.PerformLayout();
             this.pnlLogin.ResumeLayout(false);
             this.pnlLogin.PerformLayout();
+            this.gbConfigStatusTitle.ResumeLayout(false);
+            this.gbConfigStatusTitle.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -321,9 +326,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripLabel lblLoggedInAs;
         private System.Windows.Forms.ToolStripButton btnLogout;
-        private System.Windows.Forms.Label lblSelectedConfig;
         private System.Windows.Forms.LinkLabel llblConfig;
-        private System.Windows.Forms.Label lblConfigStateTitle;
         private System.Windows.Forms.Label lblRunState;
         private System.Windows.Forms.Button btnChangeState;
         private System.Windows.Forms.DataGridView dgvVms;
@@ -332,6 +335,8 @@
         private System.Windows.Forms.TextBox txtHostsFile;
         private System.Windows.Forms.Label lblHosts;
         private System.Windows.Forms.CheckBox cbRunOnStart;
+        private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.GroupBox gbConfigStatusTitle;
 
 
 
